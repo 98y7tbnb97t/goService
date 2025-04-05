@@ -1,27 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
-func addTask(task string, isDone bool) error {
-	newTask := Task{
-		Task:   task,
-		IsDone: isDone,
-	}
-	result := db.Create(&newTask)
-	return result.Error
-}
-
 func main() {
 	initDB()
-	err := addTask("new task", false)
-	if err != nil {
-		fmt.Println("Error adding task:", err)
-	}
 
 	e := echo.New()
 
