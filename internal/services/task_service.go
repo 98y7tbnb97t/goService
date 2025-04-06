@@ -26,3 +26,7 @@ func PatchTask(id string, task *Task) error {
 func DeleteTask(id string) error {
 	return repositories.DeleteTask(id)
 }
+
+func GetTaskByID(id string, task *Task) error {
+	return repositories.GetTaskByID(id, task)
+}

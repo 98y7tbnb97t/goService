@@ -3,6 +3,7 @@ package handlers
 import (
 	"echoServer/internal/services"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -60,8 +61,13 @@ func patchTask(c echo.Context) error {
 
 func deleteTask(c echo.Context) error {
 	id := c.Param("id")
-	if err := services.DeleteTask(id); err != nil {
+	var task services.Task
+	if err := services.GetTaskByID(id, &task); err != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{"error": "task not found"})
+	}
+	task.DeletedAt = time.Now()
+	if err := services.UpdateTask(id, &task); err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to delete task"})
 	}
 	return c.JSON(http.StatusOK, map[string]string{"status": "task deleted"})
 }

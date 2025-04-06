@@ -36,3 +36,7 @@ func PatchTask(id string, task *Task) error {
 func DeleteTask(id string) error {
 	return db.DB.Delete(&Task{}, id).Error
 }
+
+func GetTaskByID(id string, task *Task) error {
+	return db.DB.First(task, "id = ? AND deleted_at IS NULL", id).Error
+}
