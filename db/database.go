@@ -1,7 +1,7 @@
 package db
 
 import (
-	"echoServer/models"
+	// "echoServer/models"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -17,5 +17,5 @@ func InitDB() {
 		panic("failed to connect database")
 	}
 
-	DB.AutoMigrate(&models.Task{})
+	// DB.AutoMigrate(&models.Task{})
 }
