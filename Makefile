@@ -49,4 +49,16 @@ clean-backups:
 	rm -f $(BACKUP_DIR)/*.sql
 	@echo "Бэкапы удалены."
 
-.PHONY: migrate-new backup migrate migrate-down restore run clean-backups
+gen:
+	@echo "Creating directory for generated code..."
+	mkdir -p ./internal/web/tasks
+	@echo "Generating code from OpenAPI specification..."
+	oapi-codegen -config openapi/.openapi -include-tags tasks -package tasks openapi/openapi.yaml > ./internal/web/tasks/api.gen.go
+	@echo "Code generation completed."
+
+lint:
+	@echo "Запуск линтера..."
+	golangci-lint run --out-format=colored-line-number
+	@echo "Линтер завершил работу."
+
+.PHONY: migrate-new backup migrate migrate-down restore run clean-backups gen lint
