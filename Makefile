@@ -50,10 +50,12 @@ clean-backups:
 	@echo "Бэкапы удалены."
 
 gen:
-	@echo "Creating directory for generated code..."
+	@echo "Creating directories for generated code..."
 	mkdir -p ./internal/web/tasks
+	mkdir -p ./internal/web/users
 	@echo "Generating code from OpenAPI specification..."
 	oapi-codegen -config openapi/.openapi -include-tags tasks -package tasks openapi/openapi.yaml > ./internal/web/tasks/api.gen.go
+	oapi-codegen -config openapi/.openapi -include-tags users -package users openapi/openapi.yaml > ./internal/web/users/api.gen.go
 	@echo "Code generation completed."
 
 lint:
