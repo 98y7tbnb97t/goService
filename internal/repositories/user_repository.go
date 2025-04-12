@@ -8,7 +8,7 @@ import (
 // GetAllUsers retrieves all users from the database.
 func GetAllUsers() ([]models.User, error) {
 	var users []models.User
-	result := db.DB.Find(&users)
+	result := db.DB.Omit("created_at", "updated_at", "deleted_at").Find(&users)
 	return users, result.Error
 }
 

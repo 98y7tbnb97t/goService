@@ -68,7 +68,8 @@ func deleteTask(c echo.Context) error {
 	if err := services.GetTaskByID(id, &task); err != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{"error": "task not found"})
 	}
-	task.DeletedAt = time.Now()
+	now := time.Now()
+	task.DeletedAt = &now
 	if err := services.UpdateTask(id, &task); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to delete task"})
 	}

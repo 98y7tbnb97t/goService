@@ -3,6 +3,7 @@ package userHandlers
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"echoServer/internal/services"
 
@@ -53,7 +54,11 @@ func deleteUser(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, map[string]string{"error": "user not found"})
 	}
 
-	if err := services.DeleteUser(id); err != nil {
+	// Set deletion time
+	now := time.Now()
+	user.DeletedAt = &now
+
+	if err := services.UpdateUser(id, user); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to delete user"})
 	}
 	return c.JSON(http.StatusOK, map[string]string{"status": "user deleted"})
