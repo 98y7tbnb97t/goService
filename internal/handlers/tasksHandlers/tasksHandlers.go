@@ -1,4 +1,4 @@
-package handlers
+package tasksHandlers
 
 import (
 	"echoServer/internal/services"
@@ -27,7 +27,7 @@ func getTasks(c echo.Context) error {
 func createTask(c echo.Context) error {
 	var task services.Task
 	if err := c.Bind(&task); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid request"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid requestt"})
 	}
 	if err := services.CreateTask(&task); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to create task"})

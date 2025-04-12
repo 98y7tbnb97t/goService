@@ -2,7 +2,8 @@ package main
 
 import (
 	"echoServer/db"
-	"echoServer/internal/handlers"
+	"echoServer/internal/handlers/tasksHandlers" // Import tasks handlers package
+	"echoServer/internal/handlers/userHandlers"  // Import user handlers package
 	"echoServer/internal/middleware"
 	"log"
 
@@ -20,7 +21,10 @@ func main() {
 
 	e.Use(middleware.TimestampMiddleware)
 
-	handlers.RegisterTaskHandlers(e)
+	// Register tasks related endpoints from tasksHandlers (renamed from handlers)
+	tasksHandlers.RegisterTaskHandlers(e)
+	// Register user related endpoints from the new userHandlers
+	userHandlers.RegisterUserHandlers(e)
 
 	log.Println("Server starting on port :8882")
 	if err := e.Start(":8882"); err != nil {

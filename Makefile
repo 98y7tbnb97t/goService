@@ -60,5 +60,11 @@ lint:
 	@echo "Запуск линтера..."
 	golangci-lint run --out-format=colored-line-number
 	@echo "Линтер завершил работу."
+gen-users:
+	@echo "Creating directory for generated code for users..."
+	mkdir -p ./internal/web/users
+	@echo "Generating code from OpenAPI specification for users..."
+	oapi-codegen -config openapi/.openapi -include-tags users -package users openapi/openapi.yaml > ./internal/web/users/api.gen.go
+	@echo "Code generation for users completed."
 
-.PHONY: migrate-new backup migrate migrate-down restore run clean-backups gen lint
+.PHONY: migrate-new backup migrate migrate-down restore run clean-backups gen gen-users lint
