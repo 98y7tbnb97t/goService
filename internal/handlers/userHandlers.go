@@ -9,6 +9,12 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// CreateUserRequest представляет входные данные для создания пользователя.
+type CreateUserRequest struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,min=8"`
+}
+
 type UserHandlers struct {
 	service service.UserService
 }
@@ -33,9 +39,15 @@ func (h *UserHandlers) GetUsers(c echo.Context) error {
 }
 
 func (h *UserHandlers) CreateUser(c echo.Context) error {
-	var user models.User
-	if err := c.Bind(&user); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid request body"})
+	var req CreateUserRequest
+	if err := c.Bind(&req); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
+	}
+
+	// Преобразовываем DTO в модель пользователя.
+	user := models.User{
+		Email:    req.Email,
+		Password: req.Password,
 	}
 
 	createdUser, err := h.service.CreateUser(user)
