@@ -1,4 +1,8 @@
 
+# Если pg_dump не найден в PATH, укажите сюда полный путь, например:
+PG_DUMP ?= pg_dump
+PG_RESTORE ?= pg_restore
+
 DB_USER := postgres
 DB_PASS := root
 DB_HOST := localhost
@@ -18,10 +22,10 @@ migrate-new:
 
 backup:
 	@echo "Создание резервной копии базы данных в $(BACKUP_FILE)..."
-	PGPASSWORD=$(DB_PASS) pg_dump -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d $(DB_NAME) -F c -b -v -f "$(BACKUP_FILE)"
+	PGPASSWORD=$(DB_PASS) $(PG_DUMP) -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d $(DB_NAME) -F c -b -v -f "$(BACKUP_FILE)"
 	@echo "Резервная копия создана: $(BACKUP_FILE)"
 
-migrate: backup
+migrate: 
 	@echo "Применение миграций..."
 	$(MIGRATE) up
 	@echo "Миграции применены."
@@ -41,7 +45,7 @@ restore:
 	if [ -z "$$RESTORE_FILE" ]; then echo "Не найдены файлы бэкапов в $(BACKUP_DIR)"; exit 1; fi; \
 	if [ ! -f "$$RESTORE_FILE" ]; then echo "Файл бэкапа не найден: $$RESTORE_FILE"; exit 1; fi; \
 	echo "Восстановление базы данных из файла: $$RESTORE_FILE..."; \
-	PGPASSWORD=$(DB_PASS) pg_restore -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d $(DB_NAME) -c -1 -v "$$RESTORE_FILE"; \
+	PGPASSWORD=$(DB_PASS) $(PG_RESTORE) -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d $(DB_NAME) -c -1 -v "$$RESTORE_FILE"; \
 	echo "База данных восстановлена из $$RESTORE_FILE."
 
 clean-backups:

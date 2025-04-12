@@ -15,6 +15,11 @@ func CreateTask(task *Task) error {
 	return repositories.CreateTask(task)
 }
 
+func CreateTaskForUser(userID uint, task *Task) error {
+	task.UserID = userID
+	return repositories.CreateTask(task)
+}
+
 func UpdateTask(id string, task *Task) error {
 	return repositories.UpdateTask(id, task)
 }

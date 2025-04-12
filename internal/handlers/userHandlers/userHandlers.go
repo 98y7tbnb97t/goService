@@ -26,11 +26,11 @@ func getUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, users)
 }
 
-// createUser handles POST /users to create a new user.
+// createUser handles POST /users to create a new user
 func createUser(c echo.Context) error {
 	var user services.User
 	if err := c.Bind(&user); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid request"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid request: " + err.Error()})
 	}
 
 	if err := services.CreateUser(&user); err != nil {

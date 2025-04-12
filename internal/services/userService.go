@@ -30,3 +30,7 @@ func DeleteUser(id int) error {
 func UpdateUser(id int, updates *User) error {
 	return repositories.UpdateUser(id, updates)
 }
+
+func GetTasksForUser(userID uint) ([]models.Task, error) {
+	return repositories.GetTasksForUser(userID)
+}

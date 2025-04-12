@@ -27,9 +27,13 @@ func getTasks(c echo.Context) error {
 func createTask(c echo.Context) error {
 	var task services.Task
 	if err := c.Bind(&task); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid requestt"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "invalid request"})
 	}
-	if err := services.CreateTask(&task); err != nil {
+	if task.UserID == 0 {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "field user_id is required"})
+	}
+	// Создаём задачу с привязкой к пользователю
+	if err := services.CreateTaskForUser(task.UserID, &task); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "failed to create task"})
 	}
 	return c.JSON(http.StatusOK, task)
