@@ -9,7 +9,7 @@ type Task = models.Task
 
 func GetTasks() ([]Task, error) {
 	var tasks []Task
-	result := db.DB.Find(&tasks)
+	result := db.DB.Omit("created_at", "updated_at", "deleted_at").Find(&tasks)
 	return tasks, result.Error
 }
 
@@ -38,12 +38,14 @@ func DeleteTask(id string) error {
 }
 
 func GetTaskByID(id string, task *Task) error {
-	return db.DB.First(task, "id = ? AND deleted_at IS NULL", id).Error
+	// Omit the _at fields so they are not returned
+	return db.DB.Omit("created_at", "updated_at", "deleted_at").First(task, "id = ? AND deleted_at IS NULL", id).Error
 }
 
 // GetTasksForUser retrieves all tasks belonging to a specific user
 func GetTasksForUser(userID uint) ([]Task, error) {
 	var tasks []Task
-	result := db.DB.Where("user_id = ?", userID).Find(&tasks)
+	// Omit the _at fields from the result
+	result := db.DB.Omit("created_at", "updated_at", "deleted_at").Where("user_id = ?", userID).Find(&tasks)
 	return tasks, result.Error
 }
